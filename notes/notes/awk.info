@@ -1,0 +1,132 @@
+# 2
+Syntax
+-------------------------------------------------------------
+        awk [flags] "script" [flags] [file1[, file2[, ...]]]
+        script: BEGIN{...} {...} END{...}
+
+# 3
+Flags
+-------------------------------------------------------------
+        f filename:     Provide a file with the program [--file=progfile]
+        F fs:   Set the field seperator [--field-separator=fs]
+        v var=value:    Set a variable (in awk cannot be used in the BEGIN, in gawk can be used for BEGIN) [--assign=var=val]
+
+# 12
+Operators
+-------------------------------------------------------------
+        Exponential:    ** or ^
+        Ternary:        expression ? statement 1 : statement 2
+        Arithmetic:     +,-,*,/,%
+        Increment:      ++x, x++
+        Decrement:      --x, x--
+        Assignment:     =, +=, -=, *=, /=, %=, ^=, **=
+        Logical:        ==, !=, <, <=, >, >=, &&, ||, !
+        Concatenation:  doen by a space
+        REGEX:  ~, !~
+        Bitwise:        AND, OR, XOR
+        Bit-Shift:      lshift(num, times), rshift(num, times)
+        Complement:     comple(num)
+
+# 6
+BuiltIns
+-------------------------------------------------------------
+        Random: rand(), 0 <= N < 1; srand([seed]), default seed is time
+        Exponential:    exp(num), e^num
+        Trig:   atan2(y,x), cos(expr), sin(expr)  [inputs/outputs in radians]
+        Integer Truncation:     int(val)
+        Logarithm:      log(val) [base 2]
+        Square Root:    sqrt(expr)
+
+# 1
+Functions
+-------------------------------------------------------------
+        function fun_name([arg1[, arg2[, ...]]]) {...}
+        functions go outside of any of the code blocks
+        fun_name must begin with a letter and can have any combo of letters, characters, and underscores; cannot use reserved words
+        return: return val
+
+# 1
+Flow
+-------------------------------------------------------------
+        BEGIN --> 1st line --> 2nd line --> ... --> Last line --> END
+
+# 4
+Arrays
+-------------------------------------------------------------
+        All arrays are associative arrays
+        No, real, multidimensional arrays, but they can be simulated (use "n,m" as the key) (Does exist in gawk)
+        Access: [#], ["key"]
+        Deleting: delete arr[index]
+
+# 14
+Logic
+-------------------------------------------------------------
+        if:     if (condition)
+                                statement
+        if (condition) {
+                statement1
+                statement2
+                ...
+        }
+        if (condition) {...} else {...}
+        if (condition) {...} else if (condition) {...} ... else {...}
+        For:    for (init; condition; modifier) {...}
+        While:  while (condition) {...}
+        Do-While:       do {...} while (condition)
+        Loop Controle:  break, continue, exit(status code)
+        Pattern Space Controle: next (finish current instance of pattern space and move to the next one), nextfile (move to the next file in the pattern space), getline (replace current pattern space with the next line)
+
+# 8
+Shell Interactions
+-------------------------------------------------------------
+        awk can access shell commands, simple store the command in a variable (as a string)
+        system: system("cmd"), performs the command and returns the exit code
+        close:  close(cmd[, process]) used to close 2-way communication (process can be to or from)
+        |&:     Used to establish 2-way communication
+        Ex. cmd="tr [a-z] [A-Z]"; print "hello, world" |& cmd; close(cmd, "to"); cmd |& getline out; print out; close(cmd)
+                output: HELLO, WORLD
+        Can use > and >> to redirect output of print(f)
+        Can use | to pipe print into a shell command (like tr above; print "hello, world" | "tr [a-z] [A-Z]")
+
+# 4
+Time
+-------------------------------------------------------------
+        systime:        returns the current Epoch time
+        mktime:         converts provided time (string) into Epoch time (format: YYYY MM DD HH mm SS)
+        strftime:       strftime([format[, timestamp[, utc-flag]]]); formats timestamps to the specification
+        formats:        can be found at https://www.tutorialspoint.com/awk/awk_time_functions.htm
+
+# 10
+String
+-------------------------------------------------------------
+        index:  (str, sub) index of sub-string, base 1, 0 if no match
+        length: (str)
+        match:  (str, regex) index of 1st, longest match, 0 if no match
+        split:  (str, arr[, regex[, seps]]) split str into array arr based on regex (if blank, uses FS), the seperator is stored in seps (ie. what is between arr[i] and arr[i+1] is in seps[i]) (arr, and seps are cleared first), returns the length of arr
+        strtonum:       (str) converts str to a number, if starts with 0 and followed by x or X it is hex, otherwise octal, otherwise treated as decimal; if not a number returns 0
+        sub:    (regex, sub[, string]) substitue the first patern match to regex with sub into either string or $0
+        substr: (str, start[, end]) return the substring from str starting at start (index) going till the end of the string or to the provided end
+        case:   tolower(str) and toupper(str)
+        asort:  (arr[, dest[, how]]); sort within the arr, will copy and sort in the dest if provided, how can be a sort value or a compare function (asorti will sort by indexes not values)
+        Sort Values: "@ind_str_asc", "@ind_num_asc",  "@val_type_asc",  "@val_str_asc",  "@val_num_asc",  "@ind_str_desc",  "@ind_num_desc",  "@val_type_desc",  "@val_str_desc", "@val_num_desc", and "@unsorted"
+
+# 17
+Format
+-------------------------------------------------------------
+        print:  Does no format, comma seperated list will have a delimiter placed between items and a new line
+        printf: ([format,] string1[, string2[, ...]]) uses standard formating standards
+        %i:     integer, default decimal but will interpret hex (0x) or octal (0) if provided (only for reading input)
+        %d:     signed decimal integer
+        %e:     decimal, uses [-]d.dddddde[+-]dd
+        %E:     decimal, uses [-]d.ddddddE[+-]dd
+        %f:     float, uses [-]ddd.dddddd
+        %g:     uses %e of %f with non-significant zeros suppressed, whichever is shorter
+        %G:     same as %g but uses %E
+        %o:     unsigned octal
+        %u:     unsigned decimal
+        %s:     character string
+        %x:     unsigned hex, lowercase letters
+        %X:     unsigned hex, capital letters
+        can set width with a number between the % and character, will pad with space(s) unless 0 flag is used (a leading 0 before the number)
+        Left Justification:     done with a leading - before the width
+        Sign:   a leading + before the width will have output always have a sign

@@ -1,0 +1,69 @@
+# 3
+Flags
+------------------------------------------------------------------------------
+        n:      Do not print by default
+        e:      Allows you to put multiple sed 'scripts' in one sed instance (ran in the order they occure)
+        f:      Allows you to referense a sed 'script' file in the sed command (can use multiple; can put #!/bin/sed -f at the begining to exicute a script)
+
+# 4
+GNU Flags
+------------------------------------------------------------------------------
+        r:      Use extended regex [--regexp-extended]
+        i:      Edit in place (followed by an optional suffix for a backup) [--in-place]
+        z:      Use null characters instead of newlines [--null-data]
+        c:      Used with -i, copy instead of rename [--copy]
+        follow-symlinks: Will follow symlinks instead of making a new, local, file when using -i
+
+# 10
+Logic
+------------------------------------------------------------------------------
+        q:      Quit (cannot take a range directly, use {})
+        x:      Exchanges the pattern space and hold space
+        h:      Replace the contents of the hold space with the contents of the pattern space (pattern space not effected)
+        H:      Append the contents of the pattern space as a new line to the hold space
+        g:      Replace the contents of the pattern space with that of the hold space (hold space not effected)
+        G:      Append the contents of the hold space as a new line to the pattern space
+        b:      Branch unconditionally (followed by an optional label name, without it acts like a break); jump to label (can be made conditional by putting a pattern before it)
+        t:      Branch conditionally, bassed on if the last substitution command was successful; followed by label name
+        T:      Branch conditionally, bassed on if the last substitution command failed
+        Lables: Labels can be made by putting a colon (:) followed by a space and a name
+
+# 3
+Range
+------------------------------------------------------------------------------
+        Pattern:        Between //, just a $ can be used for the last line
+        Range:  Start, end; can be a line number or a pattern or a mixture of the 2 [Ex. 3 s/... 3,5 s/... /this/ s/... /this/,$ s/...]
+        {}:     Used for grouping multiple commands to a single pattern/range
+
+# 3
+Pattern Modifiers
+------------------------------------------------------------------------------
+        I:      Case insensitive (used after 2nd delimiter)
+        g:      Global (perform replacement on all matches)
+        !:      Does not match the pattern [Ex. /test/ !d]
+
+# 15
+Commands
+------------------------------------------------------------------------------
+        p:      Prints the entire pattern space (use with -n)
+        P:      Prints up to the first newline in the pattern space
+        d:      Delete the current pattern space, loads in the next one, and restarts exicution
+        D:      Deletes up to the first newline in the current pattern space, and restarts the command cycle (does not print)
+        n:      Will print the current pattern space (unleass -n) and empty it, then read the next line
+        N:      Will load in the next line and append it as a new line to the current pattern space
+        s:      Substitution (s///)
+        w:      Write to a file (provided after the w, this must be the last 'flag') [Ex. 's/pattern/&/ w outputFile']
+        r:      Read from a file (provided after the r; adds the file datat to the output stream, not pattern space; cannot take a range directly, use {}) [Ex. '/pattern/ r inputFile d]
+        a:      Append, after pattern/range with data after it (added to the output stream, not pattern space; cannot take a range directly, use {})
+        i:      Insert a new line before pattern/range with data after it (added to the output stream, not pattern space; cannot take a range directly, use {})
+        c:      Change the data on the current line with the data after it (added to the output stream, not pattern space; will change multiple lines into one)
+        y:      Transform the pattern to match the new pattern (can be used to turn uppercase to lowercase or vice versa but needs to be explicit and not use a class) (y///)
+        l:      Used to display the current pattern space, converst unprintable characters to control sequences (useful for debugging)
+        F:      Print the name of the current file (followed by a newline)
+
+# 3
+Special Characters
+------------------------------------------------------------------------------
+        &:      The entire match
+        \\:     If at the start of a patern, then next character is the delimiter; If at the end of a line it is a line continuation (mostly used with i, c, and a)
+        =:      Print the current line number (cannot take a range directly, use {})
